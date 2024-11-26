@@ -30,7 +30,7 @@ const createUser = async (req, res) => {
     res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: error.message || "error occuared" });
   }
 };
 
@@ -53,7 +53,7 @@ const login = async (req, res) => {
 
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || "123",
       { expiresIn: '1d' } // Token expires in 1 hour
     );
 
