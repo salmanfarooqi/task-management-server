@@ -1,11 +1,10 @@
-// src/controllers/taskController.js
+
 const Task = require('../models/task');
 
 
-// Create a new task
+
 const createTask = async (req, res) => {
   try {
-    // const validatedData = createTaskSchema.parse(req.body);
     const {title,description,dueDate}=req.body
         const userId=req.user.userId
         console.log("user id",req.user)
