@@ -64,10 +64,12 @@ const getTasks = async (req, res) => {
 
 
 const deleteTask = async (req, res) => {
-  const { taskId } = req.params;
+  const { id } = req.params;
+
+
 
   try {
-    const task = await Task.findByIdAndDelete(taskId);
+    const task = await Task.findByIdAndDelete(id);
     if (!task) {
       return res.status(404).json({ error: 'Task not found' });
     }

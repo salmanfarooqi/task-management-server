@@ -14,5 +14,9 @@ app.use(router);
 // Connect to the database
 connectDB();
 
+
+app.listen(5000,()=>{
+    console.log("server is cion")
+})
 // Export the app for Vercel
 module.exports = app;
