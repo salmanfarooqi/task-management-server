@@ -7,7 +7,7 @@ const createTaskSchema = z.object({
   dueDate: z.string().refine(val => !isNaN(Date.parse(val)), {
     message: "Due date must be a valid date"
   }).transform(val => new Date(val)),
-  userId: z.string().uuid("User ID must be a valid UUID")
+
 });
 
 module.exports = { createTaskSchema };
