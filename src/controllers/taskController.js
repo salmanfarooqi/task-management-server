@@ -22,17 +22,47 @@ const createTask = async (req, res) => {
   }
 };
 
-// Get all tasks
+
 const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find();
+    const { search, status, dueDate } = req.query;
+
+    let query = Task.find();
+
+    if (search) {
+      const searchRegex = new RegExp(search, 'i');  
+      query = query.or([
+        { title: { $regex: searchRegex } },
+        { description: { $regex: searchRegex } },
+      ]);
+    }
+
+
+    if (status) {
+      query = query.where('status').equals(status);
+    }
+
+    if (dueDate) {
+      
+      const validDate = new Date(dueDate);
+      if (!isNaN(validDate)) {
+        query = query.where('dueDate').equals(validDate);
+      }
+    }
+
+    const tasks = await query.exec();
+
+   
     res.status(200).json({ tasks });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error fetching tasks:', error);
+    res.status(500).json({
+      error: 'An error occurred while retrieving tasks',
+    });
   }
 };
 
-// Delete a task by ID
+
 const deleteTask = async (req, res) => {
   const { taskId } = req.params;
 
