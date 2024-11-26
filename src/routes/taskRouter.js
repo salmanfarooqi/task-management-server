@@ -1,7 +1,7 @@
 
 const express = require('express');
 const taskRouter = express.Router();
-const { createTask, getTasks, deleteTask } = require('../controllers/taskController');
+const { createTask, getTasks, deleteTask, updateTaskById } = require('../controllers/taskController');
 const authenticate = require('../middleware/authenticate');
 const validater = require('../middleware/validator');
 const { createTaskSchema } = require('../schemas/taskSchema');
@@ -13,5 +13,7 @@ taskRouter.get('/', getTasks);
 
 
 taskRouter.delete('/:id', authenticate, deleteTask);
+
+taskRouter.put('/:id',updateTaskById)
 
 module.exports = taskRouter;

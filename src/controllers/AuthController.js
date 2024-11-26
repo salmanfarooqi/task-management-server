@@ -3,7 +3,7 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
 
-// Controller to create a new user
+
 const createUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -14,15 +14,14 @@ const createUser = async (req, res) => {
       return res.status(400).json({ message: 'Email is already taken' });
     }
 
-    // Encrypt the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create the new user
+
     const newUser = new User({
       name,
       email,
-      password: hashedPassword,  // Save the encrypted password
+      password: hashedPassword,  
     });
 
     await newUser.save();
@@ -45,7 +44,7 @@ const login = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Compare passwords
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -54,7 +53,7 @@ const login = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET || "123",
-      { expiresIn: '1d' } // Token expires in 1 hour
+      { expiresIn: '1d' } 
     );
 
     res.status(200).json({

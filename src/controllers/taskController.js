@@ -25,39 +25,16 @@ const createTask = async (req, res) => {
 
 const getTasks = async (req, res) => {
   try {
-    const { search, status, dueDate } = req.query;
+   
 
-    let query = Task.find();
-
-    if (search) {
-      const searchRegex = new RegExp(search, 'i');  
-      query = query.or([
-        { title: { $regex: searchRegex } },
-        { description: { $regex: searchRegex } },
-      ]);
-    }
-
-
-    if (status) {
-      query = query.where('status').equals(status);
-    }
-
-    if (dueDate) {
-      
-      const validDate = new Date(dueDate);
-      if (!isNaN(validDate)) {
-        query = query.where('dueDate').equals(validDate);
-      }
-    }
-
-    const tasks = await query.exec();
+    const tasks = await Task.find({});
 
    
     res.status(200).json({ tasks });
   } catch (error) {
     console.error('Error fetching tasks:', error);
     res.status(500).json({
-      error: 'An error occurred while retrieving tasks',
+      error: error.message,
     });
   }
 };
@@ -96,8 +73,40 @@ const getTaskById = async (req, res) => {
   } catch (error) {
     console.error("Error fetching task:", error);
   
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: error.message || "unknow error" });
   }
 };
 
-module.exports = { createTask, getTasks, deleteTask,getTaskById };
+
+
+
+const updateTaskById = async (req, res) => {
+  const taskId = req.params.id; 
+  const { title, description, dueDate, status } = req.body; 
+
+  try {
+   
+    const task = await Task.findByPk(taskId); 
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+ 
+    task.title = title || task.title;
+    task.description = description || task.description;
+    task.dueDate = dueDate || task.dueDate;
+    task.status = status || task.status;
+
+  
+    await task.save();
+
+    return res.status(200).json({ message: "Task updated successfully", task });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message || "unknow error" });
+  }
+};
+
+
+module.exports = { createTask, getTasks, deleteTask,getTaskById,updateTaskById };
