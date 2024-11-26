@@ -79,34 +79,33 @@ const getTaskById = async (req, res) => {
 
 
 
-
 const updateTaskById = async (req, res) => {
-  const taskId = req.params.id; 
-  const { title, description, dueDate, status } = req.body; 
+  const taskId = req.params.id;
+  const { title, description, dueDate, status } = req.body;
 
   try {
    
-    const task = await Task.findByPk(taskId); 
+    const task = await Task.findById(taskId);
 
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
     }
 
- 
     task.title = title || task.title;
     task.description = description || task.description;
     task.dueDate = dueDate || task.dueDate;
     task.status = status || task.status;
 
-  
+
     await task.save();
 
-    return res.status(200).json({ message: "Task updated successfully", task });
+    return res.status(200).json({ message: "Task updated successfully"});
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: error.message || "unknow error" });
+    return res.status(500).json({ message: error.message || "Unknown error" });
   }
 };
+
 
 
 module.exports = { createTask, getTasks, deleteTask,getTaskById,updateTaskById };

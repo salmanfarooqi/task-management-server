@@ -15,6 +15,8 @@ app.use(router);
 connectDB();
 
 
-
+app.listen(5000,()=>{
+    console.log("server is runing on ")
+})
 
 module.exports = app;
