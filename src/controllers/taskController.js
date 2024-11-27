@@ -81,11 +81,27 @@ const getTaskById = async (req, res) => {
 
 const updateTaskById = async (req, res) => {
   const taskId = req.params.id;
+
+
   const { title, description, dueDate, status } = req.body;
 
+  
+
   try {
+
+
+  
+
+       if( !title||!description || !dueDate ){
+        return   res.send("")
+       }
+
+ 
+
    
     const task = await Task.findById(taskId);
+
+
 
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
@@ -99,11 +115,14 @@ const updateTaskById = async (req, res) => {
 
     await task.save();
 
+    console.log( "TTTT",await Task.find())
     return res.status(200).json({ message: "Task updated successfully"});
+  
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: error.message || "Unknown error" });
   }
+
 };
 
 
